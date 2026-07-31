@@ -918,6 +918,7 @@ def create_subagent_toolset(  # noqa: C901
             ctx: RunContext[SubAgentDepsProtocol],
             description: str,
             instructions: str,
+            name: str,
             model: str | None = None,
             capabilities: list[str] | None = None,
             can_ask_questions: bool = True,
@@ -929,13 +930,12 @@ def create_subagent_toolset(  # noqa: C901
         ) -> str:
             """Create an ephemeral specialist and delegate a task in one call."""
             task_id = str(uuid.uuid4())[:8]
-            agent_name = f"oneshot-{task_id}"
             agent_description = description[:120] or "Ephemeral specialist"
             actual_model = model or default_model
 
             result = build_dynamic_agent(
                 ctx,
-                name=agent_name,
+                name=name,
                 description=agent_description,
                 instructions=instructions,
                 model=actual_model,
@@ -951,7 +951,7 @@ def create_subagent_toolset(  # noqa: C901
             agent, config = result
 
             subagent = CompiledSubAgent(
-                name=agent_name,
+                name=name,
                 description=agent_description,
                 agent=agent,
                 config=config,
